@@ -4,8 +4,8 @@ APPDIR=/confluence/application
 DATADIR=/confluence/data
 
 if [ ! -d $APPDIR ]; then
-	chmod +x /atlassian-confluence-5.4.1-x64.bin
-	(echo ""; echo ""; echo $APPDIR; echo "$DATADIR"; echo ""; echo "n") | /atlassian-confluence-5.4.1-x64.bin
+	chmod +x /atlassian-confluence-x64.bin
+	(echo ""; echo ""; echo $APPDIR; echo "$DATADIR"; echo ""; echo "n") | /atlassian-confluence-x64.bin
 
 	sleep 20
 	kill `cat $APPDIR/work/catalina.pid`

@@ -1,37 +1,39 @@
 FROM ubuntu:12.04
-MAINTAINER Ken(@teaplanet)
+MAINTAINER Dmitriy Scherbakov (DGTL LLC)
 
 # locale
-RUN locale-gen ja_JP.UTF-8
-RUN update-locale LANG=ja_JP.UTF-8
-ENV LANG ja_JP.UTF-8
+RUN locale-gen en_US.UTF-8
+RUN update-locale LANG=en_US.UTF-8
+ENV LANG en_US.UTF-8
 
-RUN echo "Asia/Tokyo" > /etc/timezone    
+ENV VERSION 5.5.2
+
+RUN echo "Etc/UTC" > /etc/timezone    
 RUN dpkg-reconfigure -f noninteractive tzdata
 
 # upstart on Docker
 RUN dpkg-divert --local --rename --add /sbin/initctl
-RUN ln -s /bin/true /sbin/initctl
+# RUN ln -s /bin/true /sbin/initctl
 
 # mount
-RUN cat /proc/mounts > /etc/mtab
+# RUN cat /proc/mounts > /etc/mtab
 
 # OS
-RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
+# RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
 RUN apt-get update
 RUN apt-get -y install vim curl pwgen unzip less supervisor ntpdate python-software-properties sudo
 
 ## timezone
 RUN rm /etc/localtime
-RUN ln -s /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+RUN ln -s /usr/share/zoneinfo/Etc/UTC /etc/localtime
 
 
-# install & setup
-## ssh
-RUN apt-get -y install ssh
-RUN update-rc.d ssh defaults
-RUN mkdir /var/run/sshd
-ADD ./supervisor/sshd.conf /etc/supervisor/conf.d/sshd.conf
+# # install & setup
+# # ssh
+# RUN apt-get -y install ssh
+# RUN update-rc.d ssh defaults
+# RUN mkdir /var/run/sshd
+# ADD ./supervisor/sshd.conf /etc/supervisor/conf.d/sshd.conf
 
 ## MySQL
 RUN echo mysql-server mysql-server/root_password password '' | debconf-set-selections
@@ -46,15 +48,15 @@ ADD ./supervisor/mysql.conf /etc/supervisor/conf.d/mysql.conf
 ADD ./character_set.cnf /etc/mysql/conf.d/character_set.cnf
 
 # Confluence
-ADD http://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-5.4.1-x64.bin /atlassian-confluence-5.4.1-x64.bin
+ADD http://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-$VERSION-x64.bin /atlassian-confluence-x64.bin
 ADD ./supervisor/confluence.conf /etc/supervisor/conf.d/confluence.conf
 ADD http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.28.tar.gz /
 
 ## user
-RUN useradd -d /home/ken -g users -k /etc/skel -m -s /bin/bash ken
-RUN yes password | passwd ken
-RUN echo "ken	ALL=(ALL:ALL) ALL" > /etc/sudoers.d/ken
-RUN chmod 440 /etc/sudoers.d/ken
+RUN useradd -d /home/admin -g users -k /etc/skel -m -s /bin/bash admin
+RUN yes password | passwd admin
+RUN echo "admin	ALL=(ALL:ALL) ALL" > /etc/sudoers.d/admin
+RUN chmod 440 /etc/sudoers.d/admin
 
 ADD ./start.sh /
 ADD ./startup /startup

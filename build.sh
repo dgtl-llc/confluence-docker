@@ -1,2 +1,2 @@
 #!/bin/sh
-sudo docker build -rm=true -t "ken/confluence" .
+sudo docker build --rm=true -t "dgtl/confluence" .

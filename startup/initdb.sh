@@ -19,8 +19,15 @@ if [ ! -d $DATADIR/mysql ]; then
 	DB_USER="confluence"
 	DB_PASSWORD=`pwgen -c -n -1 12`
 
-	echo MySQL root password: $MYSQL_PASSWORD
-	echo user password : $DB_PASSWORD
+	echo ""
+	echo ""
+	echo "-------------------- MySQL Data -------------------"
+	echo ""
+	echo Root password: $MYSQL_PASSWORD
+	echo ""
+	echo User password : $DB_PASSWORD
+	echo ""
+	echo "---------------------------------------------------"
 	echo $MYSQL_PASSWORD > $CONFLUENCE_DIR/mysql-root-pw.txt
 	echo $DB_PASSWORD > $CONFLUENCE_DIR/db-user-pw.txt
 
